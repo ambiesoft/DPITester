@@ -60,6 +60,9 @@
     <ClInclude Include="..\..\..\lsMisc\UTF16toUTF8.h">
       <Filter>1 Header Files\lsMisc</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\common.h">
+      <Filter>1 Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DPITesterWin32.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\lsMisc\UTF16toUTF8.cpp">
       <Filter>2 Source Files\lsMisc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\common.cpp">
+      <Filter>2 Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

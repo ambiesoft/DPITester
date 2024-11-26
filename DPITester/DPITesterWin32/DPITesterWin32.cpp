@@ -3,11 +3,12 @@
 
 #include "framework.h"
 
-
 #include "../../../lsMisc/CommandLineParser.h"
 #include "../../../lsMisc/DebugMacro.h"
 #include "../../../lsMisc/stdosd/stdosd.h"
 #include "../../../lsMisc/OpenCommon.h"
+
+#include "../common/common.h"
 
 #include "DPITesterWin32.h"
 
@@ -39,6 +40,7 @@ void ErrorClose(std::wstring errorMessage)
     exit(1);
 }
 
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -47,35 +49,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    CCommandLineParser parser;
-    
-    parser.AddOption({ L"-dpi" },
-        ArgCount::ArgCount_One,
-        &gDpi,
-        ArgEncodingFlags_Default,
-        L"DPI type: 'none', 'system', 'pmv2'");
-
-    parser.Parse();
-
-    if (!gDpi.empty())
-    {
-        if (gDpi == L"none")
-        {
-
-        }
-        else if (gDpi == L"system")
-        {
-            DVERIFY(SetProcessDPIAware());
-        }
-        else if (gDpi == L"pmv2")
-        {
-            DVERIFY(SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2));
-        }
-        else
-        {
-            ErrorClose(L"Unknown dpi:" + gDpi);
-        }
-    }
+    if(!getDpiFromCommandLine(&gDpi))
+        ErrorClose(L"Unknown dpi:" + gDpi);
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);

@@ -4,3 +4,9 @@
 #pragma once
 
 // TODO: reference additional headers your program requires here
+#include <Windows.h>
+#include <WinUser.h>
+
+#include <string>
+
+#include "../../../lsMisc/DebugMacro.h"
