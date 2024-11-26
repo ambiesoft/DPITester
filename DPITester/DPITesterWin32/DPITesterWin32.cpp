@@ -2,23 +2,42 @@
 //
 
 #include "framework.h"
-#include <string>
-#include <sstream>
+
+
+#include "../../../lsMisc/CommandLineParser.h"
+#include "../../../lsMisc/DebugMacro.h"
+#include "../../../lsMisc/stdosd/stdosd.h"
+#include "../../../lsMisc/OpenCommon.h"
 
 #include "DPITesterWin32.h"
 
+#pragma comment(lib, "shlwapi.lib")
+
 #define MAX_LOADSTRING 100
+#define APPNAME L"DPITesterWin32"
+
+using namespace Ambiesoft;
+using namespace Ambiesoft::stdosd;
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-
+std::wstring gDpi;
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+void ErrorClose(std::wstring errorMessage)
+{
+    MessageBox(nullptr,
+        errorMessage.c_str(),
+        APPNAME,
+        MB_ICONERROR);
+    exit(1);
+}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -28,7 +47,35 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: Place code here.
+    CCommandLineParser parser;
+    
+    parser.AddOption({ L"-dpi" },
+        ArgCount::ArgCount_One,
+        &gDpi,
+        ArgEncodingFlags_Default,
+        L"DPI type: 'none', 'system', 'pmv2'");
+
+    parser.Parse();
+
+    if (!gDpi.empty())
+    {
+        if (gDpi == L"none")
+        {
+
+        }
+        else if (gDpi == L"system")
+        {
+            DVERIFY(SetProcessDPIAware());
+        }
+        else if (gDpi == L"pmv2")
+        {
+            DVERIFY(SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2));
+        }
+        else
+        {
+            ErrorClose(L"Unknown dpi:" + gDpi);
+        }
+    }
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -118,6 +165,22 @@ void OnRefresh(HWND hWnd)
 {
     InvalidateRect(hWnd, nullptr, TRUE);
 }
+void OnReLaunch(HWND hWnd, int wmID)
+{
+    std::wstring commandLineOption = L"-dpi";
+    if (wmID == ID_FILE_LAUNCHWITHNONE)
+        commandLineOption += L"";
+    else if (wmID == ID_FILE_LAUNCHWITHSYSTEM)
+        commandLineOption += L" system";
+    else if (wmID == ID_FILE_LAUNCHWITHPMV2)
+        commandLineOption += L" pmv2";
+    else
+        DASSERT(false);
+
+    OpenCommon(hWnd,
+        stdGetModuleFileName().c_str(),
+        commandLineOption.c_str());
+}
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -132,6 +195,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_CREATE:
+        {
+            std::wstring title;
+            stdGetWindowText(hWnd, &title);
+            title = stdFormat(L"%s (%s)",
+                title.c_str(),
+                gDpi.c_str());
+            SetWindowText(hWnd, title.c_str());
+        }
+        break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -146,6 +219,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case ID_FILE_REFRESH:
                 OnRefresh(hWnd);
+                break;
+            case ID_FILE_LAUNCHWITHNONE:
+            case ID_FILE_LAUNCHWITHSYSTEM:
+            case ID_FILE_LAUNCHWITHPMV2:
+                OnReLaunch(hWnd, wmId);
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
