@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DPITesterCS", "DPITesterCS\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet8App", "DotNet8App\DotNet8App.csproj", "{DC17DDCF-2FF4-42FC-A574-C8A8D0142176}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DPITesterWpf", "DPITesterWpf\DPITesterWpf.csproj", "{C0A529E4-A05E-4B95-B78A-0068959D6599}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{DC17DDCF-2FF4-42FC-A574-C8A8D0142176}.Release|x64.Build.0 = Release|Any CPU
 		{DC17DDCF-2FF4-42FC-A574-C8A8D0142176}.Release|x86.ActiveCfg = Release|Any CPU
 		{DC17DDCF-2FF4-42FC-A574-C8A8D0142176}.Release|x86.Build.0 = Release|Any CPU
+		{C0A529E4-A05E-4B95-B78A-0068959D6599}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C0A529E4-A05E-4B95-B78A-0068959D6599}.Debug|x64.Build.0 = Debug|Any CPU
+		{C0A529E4-A05E-4B95-B78A-0068959D6599}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C0A529E4-A05E-4B95-B78A-0068959D6599}.Debug|x86.Build.0 = Debug|Any CPU
+		{C0A529E4-A05E-4B95-B78A-0068959D6599}.Release|x64.ActiveCfg = Release|Any CPU
+		{C0A529E4-A05E-4B95-B78A-0068959D6599}.Release|x64.Build.0 = Release|Any CPU
+		{C0A529E4-A05E-4B95-B78A-0068959D6599}.Release|x86.ActiveCfg = Release|Any CPU
+		{C0A529E4-A05E-4B95-B78A-0068959D6599}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
